@@ -314,7 +314,8 @@
     // Returns `true` if the attribute contains a value that is not null
     // or undefined.
     has: function(attr) {
-      return this.get(attr) != null;
+      var value = this.get(attr);
+      return typeof value != "undefined" && value !== null;
     },
 
     // Set a hash of model attributes on the object, firing `"change"`. This is
@@ -693,6 +694,8 @@
       var toAdd = [], toRemove = [], modelMap = {};
       var add = options.add, merge = options.merge, remove = options.remove;
       var order = !sortable && add && remove ? [] : false;
+      var idAttribute =
+          typeof targetModel.prototype.idAttribute != "undefined" ? targetModel.prototype.idAttribute : "id";
 
       // Turn bare objects into model references, and prevent invalid models
       // from being added.
@@ -701,7 +704,7 @@
         if (attrs instanceof Model) {
           id = model = attrs;
         } else {
-          id = attrs[targetModel.prototype.idAttribute || 'id'];
+          id = attrs[idAttribute];
         }
 
         // If a duplicate is found, prevent it from being added and
