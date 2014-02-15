@@ -250,7 +250,7 @@
     var attrs = attributes || {};
     options || (options = {});
     this.cid = _.uniqueId('c');
-    // this.attributes = {};
+    this.attributes = {};
     if (options.collection) this.collection = options.collection;
     if (options.parse) attrs = this.parse(attrs, options) || {};
 
@@ -259,7 +259,7 @@
     // No point using Backbone.Model.set in constructor as we know this.attributes is not set and no one could have
     // bound any event listeners yet. Calling Backbone.Model.set would be considerable overhead.
     // this.set(attrs, options);
-    if (!options.validate || this._validate(attrs, options)) {
+    if (!options.validate || !this.validate || this._validate(attrs, options)) {
       if (this.idAttribute in attrs) this.id = attrs[this.idAttribute];
       this.attributes = attrs;
 
