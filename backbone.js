@@ -250,7 +250,7 @@
     var attrs = attributes || {};
     options || (options = {});
     this.cid = _.uniqueId('c');
-    // this.attributes = {};
+    this.attributes = {};
     if (options.collection) this.collection = options.collection;
     if (options.parse) attrs = this.parse(attrs, options) || {};
 
