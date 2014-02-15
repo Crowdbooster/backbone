@@ -250,11 +250,25 @@
     var attrs = attributes || {};
     options || (options = {});
     this.cid = _.uniqueId('c');
-    this.attributes = {};
+    // this.attributes = {};
     if (options.collection) this.collection = options.collection;
     if (options.parse) attrs = this.parse(attrs, options) || {};
-    attrs = _.defaults({}, attrs, _.result(this, 'defaults'));
-    this.set(attrs, options);
+
+    if (!options.hpSkipAttrsCloning) attrs = _.clone(attrs);
+    _.defaults(attrs, _.result(this, 'defaults'));
+    // No point using Backbone.Model.set in constructor as we know this.attributes is not set and no one could have
+    // bound any event listeners yet. Calling Backbone.Model.set would be considerable overhead.
+    // this.set(attrs, options);
+    if (!options.validate || this._validate(attrs, options)) {
+      if (this.idAttribute in attrs) this.id = attrs[this.idAttribute];
+      this.attributes = attrs;
+
+      // Setting the state as it would be after Backbone.Model.set call.
+      this._previousAttributes = {};
+      this._pending = false;
+      this._changing = false;
+    }
+
     this.changed = {};
     this.initialize.apply(this, arguments);
   };
@@ -911,7 +925,8 @@
     // collection.
     _prepareModel: function(attrs, options) {
       if (attrs instanceof Model) return attrs;
-      options = options ? _.clone(options) : {};
+      options || (options = {});
+      if(!options.hpSkipOptsCloning) options = _.clone(options);
       options.collection = this;
       var model = new this.model(attrs, options);
       if (!model.validationError) return model;
