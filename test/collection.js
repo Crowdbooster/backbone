@@ -652,15 +652,11 @@
   test("#714: access `model.collection` in a brand new model.", 2, function() {
     var collection = new Backbone.Collection;
     collection.url = '/test';
-    var Model = Backbone.Model.extend({
-      set: function(attrs) {
-        equal(attrs.prop, 'value');
-        equal(this.collection, collection);
-        return this;
-      }
-    });
-    collection.model = Model;
-    collection.create({prop: 'value'});
+    collection.model = Backbone.Model;
+    var model = collection.create({prop: 'value'});
+
+    equal(model.get("prop"), 'value');
+    equal(model.collection, collection);
   });
 
   test("#574, remove its own reference to the .models array.", 2, function() {
