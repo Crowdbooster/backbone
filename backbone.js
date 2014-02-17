@@ -694,8 +694,6 @@
       var toAdd = [], toRemove = [], modelMap = {};
       var add = options.add, merge = options.merge, remove = options.remove;
       var order = !sortable && add && remove ? [] : false;
-      var idAttribute =
-          typeof targetModel.prototype.idAttribute != "undefined" ? targetModel.prototype.idAttribute : "id";
 
       // Turn bare objects into model references, and prevent invalid models
       // from being added.
@@ -704,7 +702,7 @@
         if (attrs instanceof Model) {
           id = model = attrs;
         } else {
-          id = attrs[idAttribute];
+          id = attrs[targetModel.prototype.idAttribute !== void 0 ? targetModel.prototype.idAttribute : "id"];
         }
 
         // If a duplicate is found, prevent it from being added and
