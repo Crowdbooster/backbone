@@ -314,8 +314,7 @@
     // Returns `true` if the attribute contains a value that is not null
     // or undefined.
     has: function(attr) {
-      var value = this.get(attr);
-      return typeof value != "undefined" && value !== null;
+      return this.get(attr) != null;
     },
 
     // Set a hash of model attributes on the object, firing `"change"`. This is
